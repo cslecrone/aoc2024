@@ -47,28 +47,28 @@ func dirExists(path string) bool {
 }
 
 func createDirectories(day int) {
-	basePath := "./day-" + strconv.Itoa(day)
+	basePath := "./solutions/day-" + strconv.Itoa(day)
 	if dirExists(basePath) {
 		log.Fatalf("A directory already exists for day %d\n", day)
 	}
 
-	src, err := os.Open(templateSource)
-
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	defer src.Close()
-
 	for i := 1; i < 3; i++ {
 		p := basePath + "/part-" + strconv.Itoa(i)
 		fp := p + "/main.go"
+
 		os.MkdirAll(p, 0755)
+
 		dest, err := os.Create(fp)
 		if err != nil {
 			log.Fatal(err)
 		}
 		defer dest.Close()
+
+		src, err := os.Open(templateSource)
+		if err != nil {
+			log.Fatal(err)
+		}
+		defer src.Close()
 
 		_, err = io.Copy(dest, src)
 
@@ -108,7 +108,7 @@ func getInput(day int, sessionId string) []byte {
 }
 
 func writeInput(input []byte, day int) {
-	p := "./day-" + strconv.Itoa(day) + "/input.txt"
+	p := "./solutions/day-" + strconv.Itoa(day) + "/input.txt"
 	f, err := os.Create(p)
 	if err != nil {
 		log.Fatalf("Unable to create file %s: %s", p, err)
